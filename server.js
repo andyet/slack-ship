@@ -15,12 +15,13 @@ server.route({
                 return reply('This channel is not allowed to ship tasks').code(400);
             }
 
+            var text = request.payload.text.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+
             var message = {
-                text: '_' + encodeURIComponent(request.payload.user_name + ' shipped: ' + request.payload.text) + '_',
+                text: text,
                 icon_emoji: ':rocket:',
-                username: 'andbang',
-                channel: '#' + request.payload.channel_name,
-                mrkdwn: true
+                username: '@' + request.payload.user_name + ' shipped',
+                channel: '#' + request.payload.channel_name
             };
 
             Wreck.post(Config.url + '?token=' + Config.tokens[request.payload.channel_name], { payload: JSON.stringify(message) }, function (err, res) {
@@ -43,14 +44,7 @@ server.route({
     }
 });
 
-server.pack.register(require('good'), function (err) {
+server.start(function () {
 
-    if (err) {
-        throw err;
-    }
-
-    server.start(function () {
-
-        server.log('info', 'Slack-ship listening at: ' + server.info.uri);
-    });
+    server.log('info', 'Slack-ship listening at: ' + server.info.uri);
 });
