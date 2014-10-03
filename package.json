@@ -4,6 +4,7 @@
   "description": "a /ship alias for slack",
   "main": "server.js",
   "dependencies": {
+    "dulcimer": "^2.3.1",
     "getconfig": "^0.3.0",
     "hapi": "^6.9.0",
     "joi": "^4.7.0",

@@ -3,5 +3,9 @@
     "port": "8080",
     "url": "https://andyet.slack.com/services/hooks/incoming-webhook",
     "tokens": {
+    },
+    "dulcimer": {
+        "type": "level",
+        "path": "./db/dev.db"
     }
 }

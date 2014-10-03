@@ -1,3 +1,4 @@
 node_modules
 npm-debug.log
 production_config.json
+db
