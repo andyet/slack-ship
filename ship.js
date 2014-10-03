@@ -10,8 +10,8 @@ module.exports.register = function (plugin, options, next) {
         config: {
             handler: function (request, reply) {
 
-                if (!Config.tokens[request.payload.channel_name]) {
-                    return reply('This channel is not allowed to ship tasks').code(400);
+                if (!Config.tokens.general) {
+                    return reply('No token configured').code(400);
                 }
 
                 var text = request.payload.text.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
@@ -23,10 +23,10 @@ module.exports.register = function (plugin, options, next) {
                     text: text,
                     icon_emoji: ':rocket:',
                     username: '@' + request.payload.user_name + ' shipped',
-                    channel: '#' + request.payload.channel_name
+                    channel: request.payload.channel_id
                 };
 
-                Wreck.post(Config.url + '?token=' + Config.tokens[request.payload.channel_name], { payload: JSON.stringify(message) }, function (err, res) {
+                Wreck.post(Config.url + '?token=' + Config.tokens.general, { payload: JSON.stringify(message) }, function (err, res) {
 
                     reply();
                 });
