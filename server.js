@@ -6,6 +6,7 @@ var dulcimer = require('dulcimer');
 dulcimer.connect(Config.dulcimer);
 
 server.pack.register([
+    require('good'),
     require('./talky'),
     require('./task')
 ], function (err) {
