@@ -2,6 +2,7 @@ var Joi = require('joi');
 var Wreck = require('wreck');
 var Config = require('getconfig');
 var Task = require('./lib/task');
+var User = require('./lib/user');
 var shipTask = require('./lib/ship-task');
 
 //payload = { text, user_id, user_name }
@@ -24,7 +25,11 @@ function parseCmd(payload) {
         create: 'create',
         list: 'list',
         delete: 'delete',
-        ship: 'ship'
+        ship: 'ship',
+        start: 'start',
+        stop: 'stop',
+        team: 'team',
+        current: 'current'
     }[userCmd] || 'help';
 }
 
@@ -46,7 +51,7 @@ function parsePayload (payload) {
         taskData.task = parseTaskText(payload);
    }
 
-    if (cmd === 'ship' || cmd === 'delete') {
+    if (cmd === 'ship' || cmd === 'delete' || cmd === 'start') {
         var taskId = parseTaskText(payload);
         if (parseInt(taskId, 10)) {
             taskData.taskId = parseInt(taskId, 10);
@@ -55,6 +60,7 @@ function parsePayload (payload) {
         }
         taskData.channel = parseTaskChannel(payload);
     }
+
 
     return [cmd, taskData];
 }
@@ -139,17 +145,97 @@ function processPayload(payload, done) {
             });
         },
 
+        start: function (taskData) {
+            Task.findForUser(taskData.userId, taskData.taskId, function (err, task) {
+                if (err) { return done(err); }
+                if (!task) { return done(null, 'Could\'t find that task :('); }
+
+                User.findOrCreateByUserId(taskData.userId, function (err, user) {
+                    if (err) { return done(err); }
+
+                    var prevTask = user.currentTask && user.currentTask.task;
+                    user.currentTask = task;
+
+
+                    user.save(function (err) {
+                        var msg = 'You started working on: *' + task.task + '*';
+                        if (prevTask) {
+                            msg = "You stopped working on: *" + prevTask + "*\n" + msg;
+                        }
+
+                        done(err, msg);
+                    });
+                });
+            });
+        },
+
+        current: function (taskData) {
+            User.findOrCreateByUserId(taskData.userId, function (err, user) {
+                if (err) { return done(err); }
+                if (!user || !user.currentTask) {
+                    return done(null, "You aren't working on a task right now");
+                }
+
+                return done(null, "You are supposed to be working on: *" + user.currentTask.task + "*");
+            });
+        },
+
+        stop: function (taskData) {
+            User.findOrCreateByUserId(taskData.userId, function (err, user) {
+                if (err) { return done(err); }
+
+                var task = user.currentTask;
+
+                if (!task) {
+                    return done(null, "You weren't working on a task");
+                }
+
+                user.currentTask = undefined;
+                user.save(function (err) {
+                    done(err, 'You stopped the task: *' + task.task + '*');
+                });
+            });
+        },
+
         help: function () {
             done(null, [
                 '*Tasky help:*',
-                '```',
-                '/tasky help                 - this help',
-                '/tasky list                 - list tasks',
-                '/tasky add [your task here] - add a task',
-                '/tasky ship [task-number]   - ship task (get number from /tasky list)',
-                '/tasky delete [task-number] - delete task',
-                '```'
+                '*Basic commands*',
+                '/tasky help                                        - this help',
+                '/tasky list                                          - list tasks',
+                '/tasky add [your task here]       - add a task',
+                '/tasky ship [task-number]         - ship task (get number from /tasky list)',
+                '/tasky delete [task-number]     - delete task',
+                '',
+                '*Advanced commands*',
+                '/tasky start [task-number]        - start working on a task',
+                '/tasky stop [task-number]         - stop working on a task',
+                '/tasky current                                 - list your current task',
+                '/tasky team                                     - see what the team are working on',
             ].join('\n'));
+        },
+
+        team: function () {
+            User.all(function (err, team) {
+                if (err) { return reply(err); }
+
+                team = team.filter(function (u) { return !!u.currentTask; })
+                           .sort(function (a, b) { return a.username < b.username ? -1 : 1; })
+                           .map(function (u) {
+                                return '*' + u.currentTask.username + '*: ' + u.currentTask.task;
+                           });
+
+                if  (team.length > 0) {
+                    msg = [
+                        'People are currently working on: ',
+                        team.join('\n')
+                    ].join('\n');
+                } else {
+                    msg = "Nobody appears to be working...";
+                }
+
+                done(null, msg);
+            });
         }
     };
 
