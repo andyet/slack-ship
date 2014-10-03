@@ -17,6 +17,9 @@ server.route({
 
             var text = request.payload.text.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
 
+            //usernames should be referenced as <@username> for linkification
+            text = text.replace(/(\W)(@\w+)/g, "$1<$2>");
+
             var message = {
                 text: text,
                 icon_emoji: ':rocket:',
