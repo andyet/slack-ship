@@ -21,8 +21,8 @@ module.exports.register = function (plugin, options, next) {
         path: '/talky',
         config: {
             handler: function (request, reply) {
-                if (!Config.tokens[request.payload.channel_name]) {
-                    return reply('This channel is not allowed to talk-the-talk').code(400);
+                if (!Config.tokens.general) {
+                    return reply('No token configured').code(400);
                 }
 
                 var text = linkify("http://talky.io/" + generateName());
@@ -36,10 +36,10 @@ module.exports.register = function (plugin, options, next) {
                     text: text,
                     icon_emoji: ':talky:',
                     username: '@' + request.payload.user_name + ' wants to talk',
-                    channel: '#' + request.payload.channel_name
+                    channel: request.payload.channel_id
                 };
 
-                Wreck.post(Config.url + '?token=' + Config.tokens[request.payload.channel_name], { payload: JSON.stringify(message) }, function (err, res, body) {
+                Wreck.post(Config.url + '?token=' + Config.tokens.general, { payload: JSON.stringify(message) }, function (err, res, body) {
                     reply();
                 });
             },
