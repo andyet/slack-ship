@@ -10,7 +10,8 @@ server.pack.register([
     require('./talky'),
     require('./task'),
     require('./bitly'),
-    require('./pagerduty')
+    require('./pagerduty-oncall'),
+    require('./pagerduty-page')
 ], function (err) {
 
     if (err) { throw err; }

@@ -1,5 +1,6 @@
 var Joi = require('joi');
 var Wreck = require('wreck');
+var Strftime = require('strftime');
 var Config = require('getconfig');
 
 
@@ -7,7 +8,7 @@ module.exports.register = function (plugin, options, next) {
 
     plugin.route({
         method: 'POST',
-        path: '/oncall',
+        path: '/page',
         config: {
             handler: function (request, reply) {
                 if (!Config.tokens.general) {
@@ -18,30 +19,27 @@ module.exports.register = function (plugin, options, next) {
                     headers: {
                         "Authorization": "Token token=" + Config.pagerduty.token,
                         "Content-type":  "application/json"
+                    },
+                    payload: {
+                        "service_key":  Config.pagerduty.service_key,
+                        "incident_key": Strftime("%j%H%M"),
+                        "event_type":   "trigger",
+                        "description":  request.payload.text
                     }
                 };
 
-                Wreck.get(Config.pagerduty.oncall_url, options, function (err, res, body) {
+                Wreck.get(Config.pagerduty.event_url, options, function (err, res, body) {
                     var text;
-                    var oncall;
 
                     if ( err ) {
                         text = 'error calling PagerDuty - poke @bear'; 
                     } else {
                         var result = JSON.parse(body);
 
-                        result.users.forEach( function (u){
-                            p.on_call.forEach( function (o){
-                                if ( o.start ) {
-                                    oncall = u.name;
-                                }
-                            });
-                        });
-
-                        if ( oncall ) {
-                            text = 'Oncall is ' + oncall;
+                        if ( result.status == "success" ) {
+                            text = 'Ops Team has been paged to handle: ' + request.payload.text;
                         } else {
-                            text = 'could not determine who is oncall - poke @bear';
+                            text = 'Page has failed to be delivered - poke @bear';
                         };
                     };
 
@@ -65,7 +63,7 @@ module.exports.register = function (plugin, options, next) {
                     channel_name: Joi.string().required(),
                     user_id: Joi.string().required(),
                     user_name: Joi.string().required(),
-                    command: Joi.string().allow('/oncall').required(),
+                    command: Joi.string().allow('/page').required(),
                     text: Joi.string().optional().allow('')
                 }
             }
@@ -76,6 +74,6 @@ module.exports.register = function (plugin, options, next) {
 };
 
 module.exports.register.attributes = {
-    name: 'slack-oncall',
+    name: 'slack-page',
     version: '1.0.0'
 };
