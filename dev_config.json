@@ -4,6 +4,10 @@
     "url": "https://andyet.slack.com/services/hooks/incoming-webhook",
     "tokens": {
     },
+    "bitly": {
+        "url": "https://api-ssl.bitly.com/v3/shorten",
+        "access_token": ""
+    },
     "dulcimer": {
         "type": "level",
         "path": "./db/dev.db"
