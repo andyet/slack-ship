@@ -30,8 +30,8 @@ module.exports.register = function (plugin, options, next) {
 
                     var message = {
                         text: text,
-                        icon_emoji: ':link:',
-                        username: '@' + request.payload.user_name,
+                        icon_emoji: ':opsbot:',
+                        username: '@opsbot',
                         channel: request.payload.channel_id
                     };
 
