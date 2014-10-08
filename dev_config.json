@@ -8,6 +8,11 @@
         "url": "https://api-ssl.bitly.com/v3/shorten",
         "access_token": ""
     },
+    "pagerduty": {
+        "event_url": "https://events.pagerduty.com/generic/2010-04-15/create_event.json",
+        "oncall_url": "https://yetis.pagerduty.com/api/v1/users/on_call",
+        "token": ""
+    },
     "dulcimer": {
         "type": "level",
         "path": "./db/dev.db"

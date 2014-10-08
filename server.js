@@ -9,7 +9,8 @@ server.pack.register([
     require('good'),
     require('./talky'),
     require('./task'),
-    require('./bitly')
+    require('./bitly'),
+    require('./pagerduty')
 ], function (err) {
 
     if (err) { throw err; }
