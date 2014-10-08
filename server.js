@@ -8,7 +8,8 @@ dulcimer.connect(Config.dulcimer);
 server.pack.register([
     require('good'),
     require('./talky'),
-    require('./task')
+    require('./task'),
+    require('./bitly')
 ], function (err) {
 
     if (err) { throw err; }
