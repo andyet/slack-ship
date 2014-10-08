@@ -31,7 +31,7 @@ module.exports.register = function (plugin, options, next) {
                         var result = JSON.parse(body);
 
                         result.users.forEach( function (u){
-                            p.on_call.forEach( function (o){
+                            u.on_call.forEach( function (o){
                                 if ( o.start ) {
                                     oncall = u.name;
                                 }
