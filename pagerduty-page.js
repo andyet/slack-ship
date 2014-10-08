@@ -15,17 +15,18 @@ module.exports.register = function (plugin, options, next) {
                     return reply('No token configured').code(400);
                 }
 
+                var payload = {
+                    "service_key":  Config.pagerduty.service_key,
+                    "incident_key": Strftime("%j%H%M"),
+                    "event_type":   "trigger",
+                    "description":  request.payload.text
+                };
                 var options = {
                     headers: {
                         "Authorization": "Token token=" + Config.pagerduty.token,
                         "Content-type":  "application/json"
                     },
-                    payload: {
-                        "service_key":  Config.pagerduty.service_key,
-                        "incident_key": Strftime("%j%H%M"),
-                        "event_type":   "trigger",
-                        "description":  request.payload.text
-                    }
+                    payload: JSON.stringify(payload)
                 };
 
                 Wreck.get(Config.pagerduty.event_url, options, function (err, res, body) {
