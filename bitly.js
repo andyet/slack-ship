@@ -21,10 +21,10 @@ module.exports.register = function (plugin, options, next) {
                         text = 'error getting shortened link'; 
                     } else {
                         var result = JSON.parse(body);
-                        if ( result ) {
+                        if ( result.data.url ) {
                             text = request.payload.text + ' :arrow_right: ' + result.data.url;
                         } else {
-                            text = 'unable to make sense of what bit.ly returned - poke @bear';
+                            text = 'bit.ly did not like that url - please make sure the url is complete';
                         };
                     };
 
