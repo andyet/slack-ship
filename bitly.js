@@ -14,7 +14,7 @@ module.exports.register = function (plugin, options, next) {
                     return reply('No token configured').code(400);
                 }
 
-                Wreck.post(Config.bitly.url + '?access_token=' + Config.bitly.access_token + '&longUrl=' + request.payload.text, {}, function (err, res, body) {
+                Wreck.post(Config.bitly.url + '?access_token=' + Config.bitly.access_token + '&longUrl=' + encodeURIComponent(request.payload.text), {}, function (err, res, body) {
                     var text;
 
                     if ( err ) {
