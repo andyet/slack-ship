@@ -29,7 +29,7 @@ module.exports.register = function (plugin, options, next) {
                     payload: JSON.stringify(payload)
                 };
 
-                Wreck.get(Config.pagerduty.event_url, options, function (err, res, body) {
+                Wreck.post(Config.pagerduty.event_url, options, function (err, res, body) {
                     var text;
 
                     if ( err ) {
