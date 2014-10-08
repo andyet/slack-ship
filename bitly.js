@@ -22,7 +22,7 @@ module.exports.register = function (plugin, options, next) {
                     } else {
                         var result = JSON.parse(body);
                         if ( result ) {
-                            text = result.data.url;
+                            text = request.payload.text + ' :arrow_right: ' + result.data.url;
                         } else {
                             text = 'unable to make sense of what bit.ly returned - poke @bear';
                         };
