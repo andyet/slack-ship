@@ -15,9 +15,10 @@ module.exports.register = function (plugin, options, next) {
                     return reply('No token configured').code(400);
                 }
 
+                var eventID = Strftime("%j%H%M");
                 var payload = {
                     "service_key":  Config.pagerduty.service_key,
-                    "incident_key": Strftime("%j%H%M"),
+                    "incident_key": eventID,
                     "event_type":   "trigger",
                     "description":  request.payload.text
                 };
@@ -38,7 +39,7 @@ module.exports.register = function (plugin, options, next) {
                         var result = JSON.parse(body);
 
                         if ( result.status == "success" ) {
-                            text = 'Ops Team has been paged to handle: ' + request.payload.text;
+                            text = 'Ops Team has been paged [' + eventID + '] :arrow_right: ' + request.payload.text;
                         } else {
                             text = 'Page has failed to be delivered - poke @bear';
                         };
