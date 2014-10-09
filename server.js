@@ -11,7 +11,9 @@ server.pack.register([
     require('./task'),
     require('./bitly'),
     require('./pagerduty-oncall'),
-    require('./pagerduty-page')
+    require('./pagerduty-page'),
+    require('./pagerduty-ack'),
+    require('./pagerduty-resolve')
 ], function (err) {
 
     if (err) { throw err; }
