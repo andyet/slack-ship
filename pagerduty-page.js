@@ -39,11 +39,13 @@ module.exports.register = function (plugin, options, next) {
                         var result = JSON.parse(body);
 
                         if ( result.status == "success" ) {
-                            text = 'Ops Team has been paged [' + eventID + '] :arrow_right: ' + request.payload.text;
+                            text = 'Ops Team has been paged [' + eventID + '] :arrow_right: ' + request.payload.text + ' /cc <@' + request.payload.user_name + '>';
                         } else {
                             text = 'Page has failed to be delivered - poke @bear';
                         };
                     };
+
+                    request.server.app.pages[eventID] = request.payload.user_name;
 
                     var message = {
                         text: text,

@@ -36,8 +36,13 @@ module.exports.register = function (plugin, options, next) {
                     } else {
                         var result = JSON.parse(body);
 
+                        var user = request.server.app.pages[request.payload.text];
+
                         if ( result.status == "success" ) {
-                            text = 'Page ' + request.payload.text + 'has been acknowledged';
+                            text = 'Page ' + request.payload.text + ' has been acknowledged by <@' + request.payload.user_name + '>';
+                            if (user) {
+                                text += ' /cc <@' + user + '>';
+                            }
                         } else {
                             text = 'Page has failed to be delivered - poke @bear';
                         };
