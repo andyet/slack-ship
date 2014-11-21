@@ -15,7 +15,7 @@ module.exports.register = function (plugin, options, next) {
                 }
 
                 var message = {
-                    text: request.payload.text,
+                    text: request.payload.user_name + ' is now ' + request.payload.text,
                     icon_emoji: ':opsbot:',
                     username: '@opsbot',
                     channel: '#availability'
