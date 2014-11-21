@@ -24,7 +24,6 @@ module.exports.register = function (plugin, options, next) {
                 Wreck.post(Config.url + '?token=' + Config.tokens.general, { payload: JSON.stringify(message) }, function (err, res, body) {
                     reply();
                 });
-                });
             },
             validate: {
                 payload: {
