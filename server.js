@@ -15,7 +15,8 @@ server.pack.register([
     require('./pagerduty-oncall'),
     require('./pagerduty-page'),
     require('./pagerduty-ack'),
-    require('./pagerduty-resolve')
+    require('./pagerduty-resolve'),
+    require('./availability')
 ], function (err) {
 
     if (err) { throw err; }
