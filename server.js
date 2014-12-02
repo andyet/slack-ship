@@ -9,6 +9,7 @@ server.app.pages = {};
 
 server.pack.register([
     require('good'),
+    require('./freeze'),
     require('./talky'),
     require('./task'),
     require('./bitly'),
