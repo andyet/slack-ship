@@ -61,6 +61,7 @@ module.exports.register = function (plugin, options, next) {
                 payload: {
                     token: Joi.string().required(),
                     team_id: Joi.string().required(),
+                    team_domain: Joi.string().required(),
                     channel_id: Joi.string().required(),
                     channel_name: Joi.string().required(),
                     user_id: Joi.string().required(),
