@@ -25,7 +25,7 @@ module.exports.register = function (plugin, options, next) {
                     return reply('No token configured').code(400);
                 }
 
-                var text = linkify("http://talky.io/" + generateName());
+                var text = linkify("http://andyet.talky.io/" + generateName());
 
                 var usernames = matchUsernames(request.payload.text);
                 if (usernames && usernames.length > 0) {
