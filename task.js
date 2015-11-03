@@ -277,7 +277,8 @@ module.exports.register = function (plugin, options, next) {
                     user_id: Joi.string().required(),
                     user_name: Joi.string().required(),
                     command: Joi.string().allow('/ship').required(),
-                    text: Joi.string().allow('').required()
+                    text: Joi.string().allow('').required(),
+                    response_url: Joi.string().allow('')
                 }
             }
         }

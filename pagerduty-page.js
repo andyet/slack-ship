@@ -69,7 +69,8 @@ module.exports.register = function (plugin, options, next) {
                     user_id: Joi.string().required(),
                     user_name: Joi.string().required(),
                     command: Joi.string().allow('/page').required(),
-                    text: Joi.string().optional().allow('')
+                    text: Joi.string().optional().allow(''),
+                    response_url: Joi.string().allow('')
                 }
             }
         }
