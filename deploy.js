@@ -42,7 +42,7 @@ module.exports.register = function (plugin, options, next) {
                         console.log('ERROR CREATING DEPLOY');
                         console.log(err);
                         return reply({
-                            text: 'Got an error creating the deployment: ' + err.message
+                            text: 'Got an error creating the deployment: ' + err.message,
                             icon_emoji: ':obpsbot:',
                             username: '@opsbot'
                         });
