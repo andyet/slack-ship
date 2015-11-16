@@ -13,6 +13,7 @@ server.pack.register([
     require('./talky'),
     require('./task'),
     require('./bitly'),
+    require('./deploy'),
     require('./pagerduty-oncall'),
     require('./pagerduty-page'),
     require('./pagerduty-ack'),
