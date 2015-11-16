@@ -29,8 +29,7 @@ module.exports.register = function (plugin, options, next) {
                 var repoParts = repo.split('/');
 
                 var branch = parts.length === 1 ? 'master' : parts[1];
-
-                github.repos.createDeployment({
+                var options = {
                     user: repoParts[0],
                     repo: repoParts[1],
                     ref: branch,
@@ -40,7 +39,12 @@ module.exports.register = function (plugin, options, next) {
                         person: request.payload.user_name,
                         raw_command: request.payload.text
                     }
-                }, function (err, res) {
+                };
+
+                console.log('Trying to create a deploy with options:');
+                console.log(options);
+
+                github.repos.createDeployment(options, function (err, res) {
 
                     if (err) {
                         console.log('ERROR CREATING DEPLOY');
