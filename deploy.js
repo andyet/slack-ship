@@ -2,11 +2,14 @@ var Joi = require('joi');
 var Wreck = require('wreck');
 var Config = require('getconfig');
 var Github = require('github');
+var github = new Github({
+    version: '3.0.0'
+});
 
 
 module.exports.register = function (plugin, options, next) {
 
-    Github.authenticate({
+    github.authenticate({
         type: 'oauth',
         token: Config.tokens.github
     });
@@ -27,7 +30,7 @@ module.exports.register = function (plugin, options, next) {
 
                 var branch = parts.length === 1 ? 'master' : parts[1];
 
-                Github.repos.createDeployment({
+                github.repos.createDeployment({
                     user: repoParts[0],
                     repo: repoParts[1],
                     ref: branch,
