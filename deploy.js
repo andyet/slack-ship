@@ -34,6 +34,7 @@ module.exports.register = function (plugin, options, next) {
                     user: repoParts[0],
                     repo: repoParts[1],
                     ref: branch,
+                    task: 'deploy',
                     description: 'triggered by slack',
                     payload: {
                         person: request.payload.user_name,
