@@ -14,6 +14,7 @@ server.pack.register([
     require('./task'),
     require('./bitly'),
     require('./deploy'),
+    require('./drone'),
     require('./pagerduty-oncall'),
     require('./pagerduty-page'),
     require('./pagerduty-ack'),
