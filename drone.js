@@ -8,6 +8,7 @@ internals.linkify = function (url, text) {
   return '<' + url + '|' + text + '>';
 
 };
+
 internals.formatBuilds = function (repo, builds) {
     var icons = {
       success: ':white_check_mark:',
@@ -51,6 +52,16 @@ module.exports.register = function (plugin, options, next) {
       }
     })
 
+    var getRepos = function (done) {
+        wreck.get('https://drone.andyet.com/api/user/repos', function (err, resp, payload) {
+            if (err) {
+                return done(err);
+            }
+
+            done(null, JSON.parse(payload));
+        });
+    };
+
     plugin.route({
         method: 'POST',
         path: '/drone',
@@ -62,10 +73,34 @@ module.exports.register = function (plugin, options, next) {
 
                 if (action === 'status') {
                     var repo = parts[1];
+
+                    if (!repo) {
+                        getRepos(function (err, repos) {
+
+                            if (err) {
+                                return reply({
+                                    text: 'Got an error querying drone: ' + err.message,
+                                    icon_emoji: ':obpsbot:',
+                                    username: '@opsbot'
+                                });
+                            }
+
+                            return reply({
+                                text: 'Usage: */drone status <repo>*\n' + internals.formatRepos(repos),
+                                icon_emoji: ':obpsbot:',
+                                username: '@opsbot'
+                            })
+                        });
+
+                        return;
+                    }
+
+
+
                     if (repo && repo.indexOf('/') === -1) {
                         repo = 'andyet/' + repo;
                     }
-                    
+
                     wreck.get('https://drone.andyet.com/api/repos/' + repo + '/builds', function (err, resp, payload) {
 
                         if (err) {
@@ -84,7 +119,7 @@ module.exports.register = function (plugin, options, next) {
 
                     });
                 } else if (action === 'repos') {
-                    wreck.get('https://drone.andyet.com/api/user/repos', function (err, resp, payload) {
+                    getRepos(function (err, repos) {
                         if (err) {
                             return reply({
                                 text: 'Got an error querying drone: ' + err.message,
@@ -92,13 +127,12 @@ module.exports.register = function (plugin, options, next) {
                                 username: '@opsbot'
                             });
                         }
-
-                        return reply({
-                            text: 'Repos in drone:\n' + internals.formatRepos(JSON.parse(payload)),
+                        reply({
+                            text: 'Repos in drone:\n' + internals.formatRepos(repos),
                             icon_emoji: ':obpsbot:',
                             username: '@opsbot'
-                        });
-                    });
+                        })
+                    })
                 }
             },
             validate: {
