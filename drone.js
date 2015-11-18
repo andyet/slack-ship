@@ -111,6 +111,14 @@ module.exports.register = function (plugin, options, next) {
                             });
                         }
 
+                        if (resp.statusCode === 404) {
+                            return reply({
+                                text: 'Got an error querying drone: 404 ' + repo + ' is not a drone repo',
+                                icon_emoji: ':obpsbot:',
+                                username: '@opsbot'
+                            })
+                        }
+
                         return reply({
                             text: repo + ' status\n' + internals.formatBuilds(repo, JSON.parse(payload).slice(0,5)),
                             icon_emoji: ':obpsbot:',
