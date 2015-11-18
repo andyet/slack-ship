@@ -12,7 +12,7 @@
     "joi": "^4.7.0",
     "moment": "^2.10.6",
     "strftime": "^0.8.2",
-    "wreck": "^5.0.1"
+    "wreck": "^6.3.0"
   },
   "devDependencies": {},
   "scripts": {
